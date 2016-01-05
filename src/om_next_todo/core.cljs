@@ -3,7 +3,7 @@
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
             [om-next-todo.parser :as p]
-            [om-next-todo.react-bs :as rbs]))
+            [om-next-todo.react-bootstrap :as rbs]))
 
 (enable-console-print!)
 
@@ -20,10 +20,11 @@
 (defui Root
   Object
   (render [this]
-    (rbs/bsNavBar nil
-                  (rbs/bsNavBarBrand nil
-                                     (dom/a nil "Om.Next ToDo"))
-                  (rbs/bsNav nil "test"))))
+    (rbs/Navbar
+      nil
+      (rbs/NavBrand
+        nil
+        (dom/a nil "Om.Next ToDo")))))
 
 (def reconciler
   (om/reconciler {:state  app-state
