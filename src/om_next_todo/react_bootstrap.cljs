@@ -35,9 +35,6 @@
 (def Nav (js/React.createFactory js/ReactBootstrap.Nav))
 (def Navbar (js/React.createFactory js/ReactBootstrap.Navbar))
 (def NavBrand (js/React.createFactory js/ReactBootstrap.NavBrand))
-(comment
-  "Does not exist?"
-  (def NavbarBrand (js/React.createFactory js/ReactBootstrap.NavbarBrand)))
 (def NavDropdown (js/React.createFactory js/ReactBootstrap.NavDropdown))
 (def NavItem (js/React.createFactory js/ReactBootstrap.NavItem))
 (def Overlay (js/React.createFactory js/ReactBootstrap.Overlay))

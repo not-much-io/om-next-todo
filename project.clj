@@ -11,7 +11,7 @@
                  [cljsjs/react-bootstrap "0.27.3-0" :exclusions [org.webjars.bower/jquery]]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
-            [lein-figwheel "0.5.0-2"]]
+            [lein-figwheel "0.5.0-1"]]
 
   :source-paths ["src"]
 
@@ -21,7 +21,8 @@
               [{:id "dev"
                 :source-paths ["src"]
 
-                ;; :figwheel {:on-jsload "om-next-todo.core/on-js-reload"}
+                ;; Removing this causes figwheel to not connect
+                :figwheel {:on-jsload "om-next-todo.core/on-js-reload"}
 
                 :compiler {:main om-next-todo.core
                            :asset-path "js/compiled/out"
