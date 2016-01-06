@@ -21,9 +21,7 @@
               [{:id "dev"
                 :source-paths ["src"]
 
-                ;; Removing this causes figwheel to not connect
-                :figwheel {:on-jsload "om-next-todo.core/on-js-reload"}
-
+                :figwheel true
                 :compiler {:main om-next-todo.core
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/om_next_todo.js"

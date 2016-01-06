@@ -1,2 +1,7 @@
 /* some style */
 
+table .btn{
+  padding: 1px 5px 1px;
+  font-size: 7px;
+  margin-right: -3px;
+}
