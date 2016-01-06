@@ -10,24 +10,24 @@
     [:title :priority])
   Object
   (render [this]
-    (println "ToDoItemQ: " (om/get-query ToDoItem))
-    (println "ToDoItemP: " (om/props this))
+    (comment (println "ToDoItemQ: " (om/get-query ToDoItem))
+             (println "ToDoItemP: " (om/props this)))
     (let [props     (om/props this)
           title     (:title props)
           priority  (:priority props)]
       (dom/tr nil
               (dom/td nil title)
-              (dom/td nil priority)
+              (dom/td #js {:className "text-center"} priority)
               (dom/td nil
                       (rbs/Button #js {:bsStyle "warning"} "Delete"))))))
 
-(def todo-item (om/factory ToDoItem {:key-fn :title}))
+(def todo-item (om/factory ToDoItem))
+
 
 (defui ToDoList
   static om/IQuery
   (query [this]
-    [:name
-     {:list (om/get-query ToDoItem)}])
+    [{:list (om/get-query ToDoItem)}])
   Object
   (render [this]
     (println "ToDoListQ: " (om/get-query ToDoList))
@@ -36,20 +36,35 @@
                            (dom/tr nil
                                    (dom/th nil
                                            "ToDo")
-                                   (dom/th nil
+                                   (dom/th #js {:className "text-center"}
                                            "Priority")
                                    (dom/th nil
                                            "")))
           props  (om/props this)
-          list   (sort-by :priority (:list props))
-          name   (:name props)]
-      (rbs/Panel #js {:header name
-                      :eventKey name
-                      :collapsible true}
-                 (rbs/Table
-                   #js {:condensed true}
-                   thead
-                   (dom/tbody nil
-                              (map todo-item list)))))))
+          list   (sort-by :priority (:list props))]
+      (rbs/Grid nil
+                (rbs/Panel nil
+                           (rbs/Table
+                             nil
+                             thead
+                             (dom/tbody nil
+                                        (map todo-item list))))))))
 
 (def todo-list (om/factory ToDoList))
+
+(defui ToDoTab
+  static om/IQuery
+  (query [this]
+    [:name
+     (om/get-query ToDoList)])
+  Object
+  (render [this]
+    (comment (println "ToDoTabQ:" (om/get-query ToDoTab))
+             (println "ToDoTabP:" (om/props this)))
+    (let [name (:name (om/props this))]
+      (rbs/Tab #js {:eventKey name
+                    :title    name}
+               (rbs/Grid nil
+                         (todo-list (om/props this)))))))
+
+(def todo-tab (om/factory ToDoTab))

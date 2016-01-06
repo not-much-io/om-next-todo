@@ -34,17 +34,16 @@
      {:todos/lists (om/get-query ui-comp/ToDoList)}])
   Object
   (render [this]
-    (println "RootQ: " (om/get-query this))
-    (println "RootP: " (om/props this))
+    (comment (println "RootQ: " (om/get-query this))
+             (println "RootP: " (om/props this)))
     (let [{:keys [todos/lists app-title]} (om/props this)]
       (dom/main nil
                 (rbs/Navbar nil
                             (rbs/NavBrand nil
                                           (dom/a nil
                                                  app-title)))
-                (rbs/Grid nil
-                          (rbs/PanelGroup nil
-                                          (map ui-comp/todo-list lists)))))))
+                (rbs/Tabs #js {:defaultActiveKey "Main"}
+                          (map ui-comp/todo-tab lists))))))
 
 (def reconciler
   (om/reconciler {:state  app-state
