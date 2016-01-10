@@ -2,13 +2,11 @@
   (:require [goog.dom :as gdom]
             [om.next :as om :refer-macros [defui]]
             [om.dom :as dom]
-            [om-next-todo.parser :as p]
-            [om-next-todo.react-bootstrap :as rbs]
-            [om-next-todo.om-ui-components :as ui-comp]))
+            [om-next-todo.parser :as p]))
 
 (enable-console-print!)
 
-(def app-state (atom {:app-title   "Om.Next Todo"
+(defonce app-state (atom {:app-title   "Om.Next Todo"
                       :todos/lists [{:name "Main"
                                      :list [{:title    "Keep an eye on bunny"
                                              :priority 1
@@ -37,18 +35,19 @@
     (comment (println "RootQ: " (om/get-query this))
              (println "RootP: " (om/props this)))
     (let [{:keys [todos/lists app-title]} (om/props this)]
-      (dom/main nil
-                (rbs/Navbar nil
-                            (rbs/NavBrand nil
-                                          (dom/a nil
-                                                 app-title)))
-                (rbs/Tabs #js {:defaultActiveKey "Main"}
-                          (map ui-comp/todo-tab lists))))))
+      (dom/main nil "add"))))
+
+(def test-fact (js/React.createFactory js/MaterialUI.AppBar))
+
+(defui MuiTest
+  Object
+  (render [this]
+    (test-fact #js {:title "Title"} "")))
 
 (def reconciler
   (om/reconciler {:state  app-state
                   :parser p/parser}))
 
 (om/add-root! reconciler
-              Root
+              MuiTest
               (gdom/getElement "app"))
