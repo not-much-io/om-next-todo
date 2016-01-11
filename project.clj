@@ -33,7 +33,7 @@
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/om_next_todo.js"
                            :main om-next-todo.core
-                           :optimizations :advanced
+                           :optimizations :none
                            :pretty-print false}}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"

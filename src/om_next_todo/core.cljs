@@ -19,20 +19,19 @@
                                   {:title    "Write code"
                                    :priority 2}]}))
 
-(defui Root
+(defui App
   static om/IQuery
   (query [this]
-    [:app-title
-     {:todos (om/get-query ui-comp/ToDoList)}])
+    [:app-title :todos])
   Object
   (render [this]
-    (comment (println "RootQ: " (om/get-query this))
-             (println "RootP: " (om/props this)))
-    (let [{:keys [todos app-title]} (om/props this)]
+    (println "RootQuery: " (om/get-query this))
+    (println "RootProps: " (om/props this))
+    (let [{:keys [app-title todos]} (om/props this)]
       (dom/main nil
                 (mui/app-bar #js {:title app-title
                                   :zDepth 1} "")
-                (ui-comp/todo-list todos)
+                (ui-comp/todo-list {:todos todos})
                 (mui/fab #js {:style #js {:position "fixed"
                                           :bottom "20px"
                                           :right "20px"}}
@@ -44,5 +43,5 @@
                   :parser p/parser}))
 
 (om/add-root! reconciler
-              Root
+              App
               (gdom/getElement "app"))

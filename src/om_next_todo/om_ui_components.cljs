@@ -8,33 +8,35 @@
 (defui ToDoItem
   static om/IQuery
   (query [this]
-    [:title :priority])
+    '[(todos/remove)])
   Object
   (render [this]
-    (comment (println "ToDoItemQ: " (om/get-query ToDoItem))
-             (println "ToDoItemP: " (om/props this)))
-    (let [props (om/props this)
-          title (:title props)
-          priority (:priority props)]
-      (mui/table-row nil
-                     (mui/table-row-column nil
-                                           title)
-                     (mui/table-row-column #js {:style #js {:textAlign "center"}}
-                                           priority)
-                     (mui/table-row-column nil
-                                           (mui/icon-button #js {:iconClassName "material-icons"}
-                                                            "remove"))))))
+    (println "ToDoItemQuery: " (om/get-query ToDoItem))
+    (println "ToDoItemProps: " (om/props this))
+    (let [props     (om/props this)
+          title     (:title props)
+          priority  (:priority props)]
+      (mui/table-row
+        nil
+        (mui/table-row-column nil
+                              title)
+        (mui/table-row-column #js {:style #js {:textAlign "center"}}
+                              priority)
+        (mui/table-row-column nil
+                              (mui/icon-button
+                                #js {:iconClassName "material-icons"
+                                     :onClick       (fn [e]
+                                                      (om/transact! this
+                                                                    `[(todos/remove {:title ~title})]))}
+                                "remove"))))))
 
 (def todo-item (om/factory ToDoItem))
 
 (defui ToDoList
-  static om/IQuery
-  (query [this]
-    [{:todos (om/get-query ToDoItem)}])
   Object
   (render [this]
-    (comment (println "ToDoListQ: " (om/get-query ToDoList))
-             (println "ToDoListP: " (om/props this)))
+    (println "ToDoListQuery: " (om/get-query ToDoList))
+    (println "ToDoListProps: " (om/props this))
     (let [thead (mui/table-header #js {:displaySelectAll false
                                        :adjustForCheckbox false}
                                   (mui/table-row nil
@@ -44,7 +46,7 @@
                                                                           "Priority")
                                                  (mui/table-header-column nil
                                                                           "")))
-          list (sort-by :priority (om/props this))]
+          list (sort-by :priority (:todos (om/props this)))]
       (mui/paper #js {:zDepth 1
                       :style #js {:margin 20}}
                  (mui/table nil

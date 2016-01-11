@@ -15,7 +15,8 @@
 
 (defmethod mutate 'todos/add
   [{:keys [state]} _ {:keys [title priority]}]
-  {:action (fn []
+  {:value {:keys [:todos]}
+   :action (fn []
              (swap! state update-in [:todos]
                     (fn [curr-todos]
                       (conj curr-todos {:title    title
@@ -23,7 +24,8 @@
 
 (defmethod mutate 'todos/remove
   [{:keys [state]} _ {:keys [title]}]
-  {:action (fn []
+  {:value {:keys [:todos]}
+   :action (fn []
              (swap! state update-in [:todos]
                     (fn [curr-todos]
                       (filter #(not= (:title %) title) curr-todos))))})
