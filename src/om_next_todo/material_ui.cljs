@@ -15,3 +15,4 @@
 (def font-icon            (js/React.createFactory js/MaterialUI.FontIcon))
 (def text-field           (js/React.createFactory js/MaterialUI.TextField))
 (def dialog               (js/React.createFactory js/MaterialUI.Dialog))
+(def checkbox             (js/React.createFactory js/MaterialUI.Checkbox))

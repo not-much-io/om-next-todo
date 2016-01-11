@@ -34,7 +34,6 @@
       (dom/main nil
                 (mui/app-bar #js {:title app-title
                                   :zDepth 1} "")
-                (ui-comp/todo-form)
                 (ui-comp/todo-list todos)
                 fab))))
 

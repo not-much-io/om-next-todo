@@ -10,7 +10,16 @@
     '[(todos/add)])
   Object
   (render [this]
-    ))
+    (mui/table-row nil
+                   (mui/table-row-column nil
+                                         (mui/text-field nil))
+                   (mui/table-row-column nil
+                                         (mui/text-field nil))
+                   (mui/table-row-column nil
+                                         (mui/icon-button #js {:iconClassName "material-icons"
+                                                               :onClick       (fn [e]
+                                                                                )}
+                                                          "add")))))
 
 (def todo-form (om/factory ToDoForm))
 
@@ -63,6 +72,7 @@
                  (mui/table nil
                             (table-header)
                             (mui/table-body nil
+                                            (todo-form)
                                             (map todo-item sorted-list)))))))
 
 (def todo-list (om/factory ToDoList))
