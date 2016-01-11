@@ -20,23 +20,23 @@
                                    :priority 2}]}))
 
 (defui App
-  static om/IQuery
-  (query [this]
-    [:app-title :todos])
   Object
   (render [this]
-    (println "RootQuery: " (om/get-query this))
-    (println "RootProps: " (om/props this))
-    (let [{:keys [app-title todos]} (om/props this)]
+    (let [{:keys [app-title todos]} (om/props this)
+          fab (mui/fab #js {:style #js {:position "fixed"
+                                        :bottom   "20px"
+                                        :right    "20px"}}
+                       (mui/font-icon #js {:className "material-icons"
+                                           :onClick   (fn [e]
+                                                        (om/transact! this `[(todos/add {:title    1
+                                                                                         :priority 1})]))}
+                                      "add"))]
       (dom/main nil
                 (mui/app-bar #js {:title app-title
                                   :zDepth 1} "")
-                (ui-comp/todo-list {:todos todos})
-                (mui/fab #js {:style #js {:position "fixed"
-                                          :bottom "20px"
-                                          :right "20px"}}
-                         (mui/font-icon #js {:className "material-icons"}
-                                        "add"))))))
+                (ui-comp/todo-form)
+                (ui-comp/todo-list todos)
+                fab))))
 
 (def reconciler
   (om/reconciler {:state  app-state
