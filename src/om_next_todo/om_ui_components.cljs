@@ -4,75 +4,83 @@
             [om.dom :as dom]
             [om-next-todo.material-ui :as mui]))
 
-(defui ToDoForm
-  static om/IQuery
-  (query [this]
-    '[(todos/add)])
-  Object
-  (render [this]
-    (mui/table-row nil
-                   (mui/table-row-column nil
-                                         (mui/text-field nil))
-                   (mui/table-row-column nil
-                                         (mui/text-field nil))
-                   (mui/table-row-column nil
-                                         (mui/icon-button #js {:iconClassName "material-icons"
-                                                               :onClick       (fn [e]
-                                                                                )}
-                                                          "add")))))
+(comment
+  "Does not render.."
 
-(def todo-form (om/factory ToDoForm))
+  (defui ToDoForm
+    static om/IQuery
+    (query [this]
+      ['(todos/add!)])
+    Object
+    (render [this]
+      (mui/table-header
+        #js {:adjustForCheckbox false
+             :displaySelectAll  false}
+        (mui/table-row
+          nil
+          (mui/table-header-col #js {:colSpan 2
+                                     :style   #js {:textAlign "center"}}
+                                (mui/text-field #js {:defaultValue "new todo.."}))))))
+
+  (def todo-form (om/factory ToDoForm)))
 
 (defui ToDoItem
   static om/IQuery
   (query [this]
-    '[(todos/remove)])
+    ['(todos/remove!)])
   Object
   (render [this]
     (let [props     (om/props this)
-          title     (:title props)
-          priority  (:priority props)]
-      (mui/table-row nil
-                     (mui/table-row-column nil
-                                           title)
-                     (mui/table-row-column #js {:style #js {:textAlign "center"}}
-                                           priority)
-                     (mui/table-row-column nil
-                                           (mui/icon-button #js {:iconClassName "material-icons"
-                                                                 :onClick       (fn [e]
-                                                                                  (om/transact! this
-                                                                                                `[(todos/remove {:title ~title})]))}
-                                                            "remove"))))))
+          title     (:title props)]
+      (mui/table-row
+        nil
+        (mui/table-row-col
+          nil
+          title)
+        (mui/table-row-col
+          #js {:style
+               #js {:textAlign "right"}}
+          (mui/icon-button
+            #js {:iconClassName "material-icons"
+                 :onClick       (fn [_]
+                                  (om/transact! this
+                                                `[(todos/remove! {:title ~title})]))}
+            "close"))))))
 
 (def todo-item (om/factory ToDoItem))
 
-(defn table-header []
-  (mui/table-header
-    #js {:displaySelectAll  false
-         :adjustForCheckbox false}
-    (mui/table-row nil
-                   (mui/table-header-column nil
-                                            "ToDo")
-                   (mui/table-header-column #js {:style
-                                                 #js {:textAlign "center"}}
-                                            "Priority")
-                   (mui/table-header-column nil
-                                            ""))))
+(defn todo-form [c]
+  (let [get-title       #(.-value (gdom/getElement "todo-input"))
+        trans-todo      (fn []
+                          (om/transact! c
+                                        `[(todos/add! {:title ~(get-title)})]))]
+    (mui/table-header
+      #js {:adjustForCheckbox false
+           :displaySelectAll  false}
+      (mui/table-row
+        nil
+        (mui/table-header-col #js {:colSpan 2
+                                   :style   #js {:textAlign "center"}}
+                              (mui/text-field #js {:id "todo-input"
+                                                   :hintText "New ToDo.."
+                                                   :onEnterKeyDown trans-todo}))))))
 
 (defui ToDoList
   static om/IQuery
   (query [this]
-    [:todos
-     (flatten (om/get-query ToDoItem))])
+    (into []
+          (concat
+            [:todos]
+            (om/get-query ToDoItem)
+            ; (om/get-query ToDoForm)
+            '(todos/add!))))
   Object
   (render [this]
-    (let [sorted-list (sort-by :priority (om/props this))]
-      (mui/paper #js {:zDepth 1
-                      :style  #js {:margin 20}}
-                 (mui/table nil
-                            (table-header)
-                            (mui/table-body nil
-                                            (todo-form)
-                                            (map todo-item sorted-list)))))))
+    (let [todos (:todos (om/props this))
+          thead (todo-form this)
+          tbody (mui/table-body nil (map todo-item todos))]
+      (mui/table nil
+                 thead
+                 tbody))))
 
 (def todo-list (om/factory ToDoList))

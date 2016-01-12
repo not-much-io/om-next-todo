@@ -8,34 +8,22 @@
 
 (enable-console-print!)
 
-(defonce app-state (atom {:app-title   "Om.Next Todo"
-                          :todos [{:title    "Keep an eye on bunny"
-                                   :priority 1
-                                   :inv      "Wut?"}
-                                  {:title    "Get something to eat"
-                                   :priority 3}
-                                  {:title    "Read books"
-                                   :priority 4}
-                                  {:title    "Write code"
-                                   :priority 2}]}))
+(def app-state (atom {:app-title   "Om.Next Todo"
+                      :todos [{:title    "Keep an eye on bunny"}
+                              {:title    "Get something to eat"}
+                              {:title    "Read books"}
+                              {:title    "Write code"}]}))
 
 (defui App
   Object
   (render [this]
-    (let [{:keys [app-title todos]} (om/props this)
-          fab (mui/fab #js {:style #js {:position "fixed"
-                                        :bottom   "20px"
-                                        :right    "20px"}}
-                       (mui/font-icon #js {:className "material-icons"
-                                           :onClick   (fn [e]
-                                                        (om/transact! this `[(todos/add {:title    1
-                                                                                         :priority 1})]))}
-                                      "add"))]
+    (let [{:keys [app-title todos]} (om/props this)]
       (dom/main nil
-                (mui/app-bar #js {:title app-title
-                                  :zDepth 1} "")
-                (ui-comp/todo-list todos)
-                fab))))
+                (mui/app-bar  #js {:zDepth 1
+                                   :title app-title})
+                (mui/paper    #js {:zDepth 1
+                                   :style  #js {:margin 20}}
+                              (ui-comp/todo-list {:todos todos}))))))
 
 (def reconciler
   (om/reconciler {:state  app-state

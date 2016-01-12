@@ -13,16 +13,13 @@
 
 (defmulti mutate om/dispatch)
 
-(defmethod mutate 'todos/add
-  [{:keys [state]} _ {:keys [title priority]}]
-  {:value {:keys [:todos]}
+(defmethod mutate 'todos/add!
+  [{:keys [state]} _ {:keys [title]}]
+  {:value  {:keys [:todos]}
    :action (fn []
-             (swap! state update-in [:todos]
-                    (fn [curr-todos]
-                      (conj curr-todos {:title    title
-                                        :priority priority}))))})
+             (swap! state update-in [:todos] conj {:title title}))})
 
-(defmethod mutate 'todos/remove
+(defmethod mutate 'todos/remove!
   [{:keys [state]} _ {:keys [title]}]
   {:value {:keys [:todos]}
    :action (fn []
